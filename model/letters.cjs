@@ -9,7 +9,8 @@ const { queryPromise } = require("../tools/queryUtils.cjs");
 const getLetterModel = async (id) => {
   try {
     const query = getLetterQuery(id);
-    return await queryPromise(query.sql, query.values);
+    const result = await queryPromise(query.sql, query.values);
+    return result;
   } catch (error) {
     console.log(error);
     return -1;
@@ -18,9 +19,15 @@ const getLetterModel = async (id) => {
 
 const checkLetterOwnerModel = async (userId, id) => {
   try {
-    const query = getLetterMemberIdQuery(id);
+    const query = getLetterMemberIdQuery(userId, id);
     const letter = await queryPromise(query.sql, query.values);
-    return letter === userId;
+    if (letter.length > 0 && letter[0].member_id === userId) {
+      return true;
+    } else if (letter.length > 0 && letter[0].member_id !== userId) {
+      return false;
+    } else {
+      return -1;
+    }
   } catch (error) {
     console.log(error);
     return -1;

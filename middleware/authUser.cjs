@@ -3,7 +3,7 @@ const getAuthUser = (req, res, next) => {
     req.user = req.session.user;
     next();
   } else {
-    return res.status(401);
+    return res.status(401).json({ status: 401 });
   }
 };
 

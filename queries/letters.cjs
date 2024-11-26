@@ -11,14 +11,13 @@ const getLetterQuery = (id) => {
 };
 
 // 편지 받는 사람 id 조회 쿼리
-const getLetterMemberIdQuery = (id) => {
+const getLetterMemberIdQuery = (userId, id) => {
   return {
     sql: `SELECT member_id
       FROM 
         letters
-      WHERE 
-        letter_id = ?;`,
-    values: [id],
+      WHERE member_id = ? AND letter_id = ?;`,
+    values: [userId, id],
   };
 };
 
