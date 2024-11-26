@@ -1,0 +1,59 @@
+const {
+  getLetterModel,
+  addLetterModel,
+  checkLetterOwnerModel,
+} = require("../model/letters.cjs");
+
+//--------------------------------------------------------
+// const getLetters = async (req, res) => {
+//   const posts = await getPostsModel();
+//   if (posts === -1)
+//     return res
+//       .status(500)
+//       .json({ status: 500, message: "Internal server error", data: null });
+
+//   return res.status(200).json({ status: 200, message: null, data: posts });
+// };
+
+const getLetter = async (req, res) => {
+  const id = Number(req.params.id);
+  if (!id) return res.status(400);
+  const userId = Number(req.session.user.member_id);
+
+  // 본인에게 씌여진 건지 권한 검사
+  if (!checkLetterOwnerModel(userId, id)) return res.status(403);
+
+  const letter = await getLetterModel(id);
+  if (letter === -1) return res.status(500);
+  if (letter.length === 0) return res.status(404);
+
+  return res.status(200).json({ data: letter });
+};
+
+const addLetter = async (req, res) => {
+  const userId = Number(req.session.user.member_id);
+  const { content, nickname, member_id, icon_type } = req.body;
+
+  if (!userId) return res.status(401);
+  if (!nickname || !content || !member_id || !icon_type) return res.status(400);
+  if (userId == member_id)
+    return res.status(400).json({ message: "cannot_write_to_me" });
+
+  const letterId = await addLetterModel({
+    content,
+    nickname,
+    member_id,
+    icon_type,
+  });
+
+  if (!letterId || letterId === -1) return res.status(500);
+
+  return res.status(201).json({
+    data: { letter_id: letterId },
+  });
+};
+
+module.exports = {
+  getLetter,
+  addLetter,
+};
