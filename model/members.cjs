@@ -57,7 +57,7 @@ const fetchLetters = async (memberId) => {
   try {
     const query = getUserLettersQuery(memberId);
     const result = await queryPromise(query.sql, query.values);
-    return result.length !== 0 ? result[0] : null;
+    return result.length !== 0 ? result : null;
   } catch (error) {
     console.log(error);
     return -1;
