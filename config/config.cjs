@@ -1,7 +1,5 @@
 // require('dotenv').config()
 
-console.log(process.env.DB_HOST, process.env.DB_HOST);
-
 const db_info = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,

@@ -12,6 +12,8 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 
 require("dotenv").config();
+
+console.log(process.env.DB_HOST, process.env.DB_HOST);
 const { db_info } = require("./config/config.cjs");
 
 const MySQLStore = require("express-mysql-session")(session);
