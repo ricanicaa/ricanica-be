@@ -29,6 +29,7 @@ const corsOptions = {
   origin: [
     "http://localhost:3000",
     "http://ec2-43-201-5-0.ap-northeast-2.compute.amazonaws.com/",
+    "http://ec2-43-201-5-0.ap-northeast-2.compute.amazonaws.com:3000",
   ],
   credentials: true,
   methods: ["GET", "PUT", "POST", "PATCH", "DELETE"],
@@ -44,9 +45,8 @@ app.use(
     saveUninitialized: true,
     resave: false,
     cookie: {
-      secure: true,
+      secure: false,
       maxAge: 1000 * 60 * 60 * 24,
-      sameSite: "none",
     },
     store: sessionStore,
   })
