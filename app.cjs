@@ -11,9 +11,8 @@ const timeout = require("connect-timeout");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 
-require("dotenv").config();
+// require("dotenv").config();
 
-console.log(process.env.DB_HOST, process.env.DB_HOST);
 const { db_info } = require("./config/config.cjs");
 
 const MySQLStore = require("express-mysql-session")(session);
@@ -27,7 +26,10 @@ const limiter = rateLimit({
 
 // CORS options
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: [
+    "http://localhost:3000",
+    "http://ec2-43-201-5-0.ap-northeast-2.compute.amazonaws.com/",
+  ],
   credentials: true,
   methods: ["GET", "PUT", "POST", "PATCH", "DELETE"],
 };
@@ -44,6 +46,7 @@ app.use(
     cookie: {
       secure: false,
       maxAge: 1000 * 60 * 60 * 24,
+      sameSite: "none",
     },
     store: sessionStore,
   })
