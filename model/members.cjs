@@ -53,11 +53,11 @@ const checkUserModel = async (memberId) => {
   }
 };
 
-const fetchLetters = async (memberId) => {
+const fetchLetters = async (memberId, cursor, limit) => {
   try {
-    const query = getUserLettersQuery(memberId);
+    const query = getUserLettersQuery(memberId, cursor, limit);
     const result = await queryPromise(query.sql, query.values);
-    return result.length !== 0 ? result : null;
+    return result.length !== 0 ? result : [];
   } catch (error) {
     console.log(error);
     return -1;

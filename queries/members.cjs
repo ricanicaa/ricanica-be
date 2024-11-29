@@ -18,14 +18,19 @@ const getEnglishNameQuery = (english_name) => {
   };
 };
 
-const getUserLettersQuery = (id) => {
-  return {
-    sql: `SELECT * 
-      FROM letters 
-      WHERE 
-        member_id = ?;`,
-    values: [id],
-  };
+const getUserLettersQuery = (id, cursor, limit) => {
+  const baseQuery = `
+    SELECT * 
+    FROM letters 
+    WHERE member_id = ? 
+      ${cursor ? "AND letter_id < ?" : ""}
+    ORDER BY CREATED_AT DESC 
+    LIMIT ?;
+  `;
+
+  const values = cursor ? [id, cursor, limit] : [id, limit];
+
+  return { sql: baseQuery, values };
 };
 
 module.exports = {

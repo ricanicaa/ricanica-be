@@ -40,10 +40,30 @@ const getLetters = async (req, res) => {
   const memberId = req.session.user.member_id;
   if (!memberId) return res.status(400).json({ status: 400 });
 
-  const letters = await fetchLetters(memberId);
-  if (letters == -1) return res.status(500).json({ status: 500 });
+  const { cursor } = req.query;
+  const limit = 10;
 
-  return res.status(200).json({ status: 200, data: letters });
+  try {
+    const letters = await fetchLetters(memberId, cursor, limit + 1);
+    if (letters === -1) return res.status(500).json({ status: 500 });
+
+    const hasNext = letters.length > limit;
+    const data = hasNext ? letters.slice(0, limit) : letters;
+    console.log(hasNext);
+    const nextCursor = hasNext ? data[data.length - 1].letter_id : null;
+    console.log(nextCursor);
+    return res.status(200).json({
+      status: 200,
+      data,
+      nextCursor,
+      hasNext,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ status: 500, message: "Internal Server Error" });
+  }
 };
 
 const userController = {
