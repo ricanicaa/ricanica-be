@@ -1,5 +1,6 @@
 const {
   getLetterQuery,
+  getLettersQuery,
   addLetterQuery,
   getLetterMemberIdQuery,
 } = require("../queries/letters.cjs");
@@ -45,8 +46,20 @@ const addLetterModel = async (data) => {
   }
 };
 
+const getLettersModel = async (memberId, offset, limit) => {
+  try {
+    const query = getLettersQuery(memberId, offset, limit);
+    const result = await queryPromise(query.sql, query.values);
+    return result.length !== 0 ? result : [];
+  } catch (error) {
+    console.log(error);
+    return -1;
+  }
+};
+
 module.exports = {
   getLetterModel,
   checkLetterOwnerModel,
   addLetterModel,
+  getLettersModel,
 };

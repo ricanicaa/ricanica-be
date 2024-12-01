@@ -36,8 +36,23 @@ const addLetterQuery = (data) => {
   };
 };
 
+const getLettersQuery = (id, offset, limit) => {
+  const baseQuery = `
+    SELECT * 
+    FROM letters 
+    WHERE member_id = ? 
+    ORDER BY CREATED_AT DESC 
+    LIMIT ? OFFSET ?;
+  `;
+
+  const values = [id, limit, offset];
+
+  return { sql: baseQuery, values };
+};
+
 module.exports = {
   getLetterQuery,
   getLetterMemberIdQuery,
   addLetterQuery,
+  getLettersQuery,
 };

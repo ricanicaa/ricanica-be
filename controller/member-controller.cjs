@@ -1,8 +1,4 @@
-const {
-  checkUserModel,
-  logInUserModel,
-  fetchLetters,
-} = require("../model/members.cjs");
+const { checkUserModel, logInUserModel } = require("../model/members.cjs");
 
 const checkLogIn = (req, res) => {
   if (req.session.user) return res.status(200);
@@ -31,41 +27,10 @@ const logInUser = async (req, res) => {
   return res.status(200).json({ data: member.member_id });
 };
 
-const getLetters = async (req, res) => {
-  const memberId = req.session.user.member_id;
-  if (!memberId) return res.status(400).json({ status: 400 });
-
-  const { cursor } = req.query;
-  const limit = 10;
-
-  try {
-    const letters = await fetchLetters(memberId, cursor, limit + 1);
-    if (letters === -1) return res.status(500).json({ status: 500 });
-
-    const hasNext = letters.length > limit;
-    const data = hasNext ? letters.slice(0, limit) : letters;
-    console.log(hasNext);
-    const nextCursor = hasNext ? data[data.length - 1].letter_id : null;
-    console.log(nextCursor);
-    return res.status(200).json({
-      status: 200,
-      data,
-      nextCursor,
-      hasNext,
-    });
-  } catch (error) {
-    console.log(error);
-    return res
-      .status(500)
-      .json({ status: 500, message: "Internal Server Error" });
-  }
-};
-
 const userController = {
   getUser,
   logInUser,
   checkLogIn,
-  getLetters,
 };
 
 module.exports = userController;
