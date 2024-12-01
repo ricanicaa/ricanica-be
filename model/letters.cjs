@@ -3,6 +3,7 @@ const {
   getLettersQuery,
   addLetterQuery,
   getLetterMemberIdQuery,
+  getLettersCountQuery,
 } = require("../queries/letters.cjs");
 
 const { queryPromise } = require("../tools/queryUtils.cjs");
@@ -57,9 +58,21 @@ const getLettersModel = async (memberId, offset, limit) => {
   }
 };
 
+const getTotalLettersCount = async (memberId) => {
+  try {
+    const query = getLettersCountQuery(memberId);
+    const result = await queryPromise(query.sql, query.values);
+    return result[0].count;
+  } catch (error) {
+    console.log(error);
+    return -1;
+  }
+};
+
 module.exports = {
   getLetterModel,
   checkLetterOwnerModel,
   addLetterModel,
   getLettersModel,
+  getTotalLettersCount,
 };

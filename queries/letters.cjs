@@ -37,17 +37,27 @@ const addLetterQuery = (data) => {
 };
 
 const getLettersQuery = (id, offset, limit) => {
-  const baseQuery = `
+  return {
+    sql: `
     SELECT * 
     FROM letters 
     WHERE member_id = ? 
     ORDER BY CREATED_AT DESC 
     LIMIT ? OFFSET ?;
-  `;
+  `,
+    values: [id, limit, offset],
+  };
+};
 
-  const values = [id, limit, offset];
-
-  return { sql: baseQuery, values };
+const getLettersCountQuery = (id) => {
+  return {
+    sql: `
+      SELECT COUNT(*) AS count 
+      FROM letters 
+      WHERE member_id = ?;
+    `,
+    values: [id],
+  };
 };
 
 module.exports = {
@@ -55,4 +65,5 @@ module.exports = {
   getLetterMemberIdQuery,
   addLetterQuery,
   getLettersQuery,
+  getLettersCountQuery,
 };

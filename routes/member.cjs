@@ -1,11 +1,5 @@
 const express = require("express");
-const {
-  getUser,
-  getLetters,
-  logInUser,
-  checkLogIn,
-} = require("../controller/member-controller.cjs");
-const { getAuthUser } = require("../middleware/authUser.cjs");
+const { logInUser } = require("../controller/member-controller.cjs");
 
 const router = express.Router();
 

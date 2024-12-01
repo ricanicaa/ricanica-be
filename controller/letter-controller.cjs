@@ -3,18 +3,8 @@ const {
   addLetterModel,
   checkLetterOwnerModel,
   getLettersModel,
+  getTotalLettersCount,
 } = require("../model/letters.cjs");
-
-//--------------------------------------------------------
-// const getLetters = async (req, res) => {
-//   const posts = await getPostsModel();
-//   if (posts === -1)
-//     return res
-//       .status(500)
-//       .json({ status: 500, message: "Internal server error", data: null });
-
-//   return res.status(200).json({ status: 200, message: null, data: posts });
-// };
 
 const getLetter = async (req, res) => {
   const id = Number(req.params.id);
@@ -69,19 +59,19 @@ const getLetters = async (req, res) => {
   const limit = 10;
 
   try {
+    const totalCount = await getTotalLettersCount(memberId);
+    if (totalCount === -1) return res.status(500).json({ status: 500 });
+    const totalPage = Math.ceil(totalCount / limit);
+
     const offset = (currentPage - 1) * limit;
 
-    const letters = await getLettersModel(memberId, offset, limit + 1);
+    const letters = await getLettersModel(memberId, offset, limit);
     if (letters === -1) return res.status(500).json({ status: 500 });
-
-    const hasNextPage = letters.length > limit;
-    const data = hasNextPage ? letters.slice(0, limit) : letters;
 
     return res.status(200).json({
       status: 200,
-      data,
-      currentPage: parseInt(currentPage, 10),
-      hasNextPage,
+      data: letters,
+      totalPage,
     });
   } catch (error) {
     console.log(error);
