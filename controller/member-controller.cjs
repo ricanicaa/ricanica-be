@@ -1,8 +1,8 @@
 const { checkUserModel, logInUserModel } = require("../model/members.cjs");
 
 const checkLogIn = (req, res) => {
-  if (req.session.user) return res.status(200);
-  return res.status(401);
+  if (req.session.user) return res.status(200).json({ status: 200 });
+  return res.status(401).json({ status: 401 });
 };
 
 const getUser = async (req, res) => {
