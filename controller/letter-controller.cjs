@@ -51,6 +51,37 @@ const addLetter = async (req, res) => {
   });
 };
 
+// const getLetters = async (req, res) => {
+//   const memberId = req.session.user.member_id;
+//   if (!memberId) return res.status(400).json({ status: 400 });
+
+//   const { currentPage = 1 } = req.query;
+//   const limit = 10;
+
+//   try {
+//     const totalCount = await getTotalLettersCount(memberId);
+//     if (totalCount === -1) return res.status(500).json({ status: 500 });
+//     const totalPage = Math.ceil(totalCount / limit);
+
+//     const offset = (currentPage - 1) * limit;
+
+//     const letters = await getLettersModel(memberId, offset, limit);
+//     if (letters === -1) return res.status(500).json({ status: 500 });
+
+//     return res.status(200).json({
+//       status: 200,
+//       data: letters,
+//       totalPage,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res
+//       .status(500)
+//       .json({ status: 500, message: "Internal Server Error" });
+//   }
+// };
+
+
 const getLetters = async (req, res) => {
   const memberId = req.session.user.member_id;
   if (!memberId) return res.status(400).json({ status: 400 });
@@ -68,9 +99,12 @@ const getLetters = async (req, res) => {
     const letters = await getLettersModel(memberId, offset, limit);
     if (letters === -1) return res.status(500).json({ status: 500 });
 
+    // content 필드 제거
+    const sanitizedLetters = letters.map(({ content, ...rest }) => rest);
+
     return res.status(200).json({
       status: 200,
-      data: letters,
+      data: sanitizedLetters,
       totalPage,
     });
   } catch (error) {
