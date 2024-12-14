@@ -8,8 +8,6 @@ const session = require("express-session");
 const app = express();
 const port = 8000;
 const timeout = require("connect-timeout");
-const rateLimit = require("express-rate-limit");
-const helmet = require("helmet");
 
 // require("dotenv").config();
 
@@ -65,9 +63,6 @@ app.use((err, req, res, next) => {
     next(err);
   }
 });
-
-app.use(limiter);
-app.use(helmet());
 
 // /api 경로용 라우터
 const apiRouter = express.Router();
