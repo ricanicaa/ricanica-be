@@ -18,12 +18,6 @@ const { db_info } = require("./config/config.cjs");
 const MySQLStore = require("express-mysql-session")(session);
 const sessionStore = new MySQLStore(db_info);
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: "too many request",
-});
-
 // CORS options
 const corsOptions = {
   origin: [
