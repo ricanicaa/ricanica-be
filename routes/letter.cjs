@@ -15,6 +15,6 @@ router.get("", getAuthUser, getLetters);
 router.post("", getAuthUser, addLetter);
 
 // 편지지 상세 - ok
-// router.get("/:id", getAuthUser, getLetter);
+router.get("/:id", getAuthUser, getLetter);
 
 module.exports = router;
